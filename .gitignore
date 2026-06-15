@@ -1,0 +1,4 @@
+__pycache__/
+*.py[cod]
+.cursor/
+debug-432c94.log
