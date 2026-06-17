@@ -6,7 +6,7 @@ import networkx as nx
 from theta_spanner import ThetaSpanner
 #from fault_theta_spanner import FaultThetaSpanner
 
-#from wspd_spanner import WspdSpanner
+from wspd_spanner import WspdSpanner
 #from fault_wspd_spanner import FaultWspdSpanner
 
 #from orchestrator import BookSimOrchestrator
@@ -87,4 +87,25 @@ def theta_spanner_example():
     ax.set_aspect("equal")
     plt.show()
 
-theta_spanner_example()
+
+def wspd_spanner_example():
+    wspd_spanner = WspdSpanner()
+    G_wspd = wspd_spanner.generate_topology()
+    print(f"WSPD Spanner: {G_wspd.edges()}")
+    print(f"WSPD Spanner: {G_wspd.nodes()}")
+    pos = graph_positions(G_wspd)
+    fig, ax = plt.subplots()
+    nx.draw(
+        G_wspd,
+        pos,
+        ax=ax,
+        with_labels=True,
+        node_color="skyblue",
+        node_size=150,
+        font_weight="bold",
+    )
+    ax.set_aspect("equal")
+    plt.show()
+
+#theta_spanner_example()
+wspd_spanner_example()
