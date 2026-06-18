@@ -3,23 +3,8 @@ import networkx as nx
 import math
 from typing import Optional, List
 from spanner_interface import ISpanner
+from scripts.data_types import TreeNode, BoundingBox
 
-class TreeNode:
-    def __init__(self, value, nodes):
-        self.value = value
-        self.nodes = nodes
-        self.left = None
-        self.right = None
-
-class BoundingBox:
-    def __init__(self, min_corner, max_corner):
-        self.min_corner = min_corner
-        self.max_corner = max_corner
-        self.width = max_corner[0] - min_corner[0]
-        self.height = max_corner[1] - min_corner[1]
-        self.center = ((min_corner[0] + max_corner[0]) / 2, (min_corner[1] + max_corner[1]) / 2)
-        self.radius = math.sqrt(self.width**2 + self.height**2) / 2
-        self.lmax = max(self.width, self.height)
 
 class WspdSpanner(ISpanner):
     def __init__(self, separation_factor: int = 6):
@@ -91,12 +76,7 @@ class WspdSpanner(ISpanner):
 
         return G
 
-    def _collect_wspd(self, tree_node, s, pair_list):
-        if tree_node.left is None or tree_node.right is None:
-            return
-        self.findWSPD(tree_node.left, tree_node.right, s, pair_list)
-        self._collect_wspd(tree_node.left, s, pair_list)
-        self._collect_wspd(tree_node.right, s, pair_list)
+
 
     def build_tree(self, G, tree_node):
         nodes = tree_node.nodes
@@ -137,6 +117,15 @@ class WspdSpanner(ISpanner):
         self.build_tree(G, tree_node.left)
         self.build_tree(G, tree_node.right)
 
+
+    def _collect_wspd(self, tree_node, s, pair_list):
+        if tree_node.left is None or tree_node.right is None:
+            return
+        self.findWSPD(tree_node.left, tree_node.right, s, pair_list)
+        self._collect_wspd(tree_node.left, s, pair_list)
+        self._collect_wspd(tree_node.right, s, pair_list)
+
+
     def findWSPD(self, node_A, node_B, s, pair_list):
         if node_A is None or node_B is None:
             return
@@ -153,6 +142,7 @@ class WspdSpanner(ISpanner):
                 return
             self.findWSPD(node_A.left, node_B, s, pair_list)
             self.findWSPD(node_A.right, node_B, s, pair_list)
+
 
     def get_routing_algorithm(self):
         return None
