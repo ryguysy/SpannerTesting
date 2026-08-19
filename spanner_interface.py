@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional, Callable
+import networkx as nx
 
 class ISpanner(ABC):
+
+    topology: nx.Graph
 
     @abstractmethod
     def generate_topology(self, nodes: Optional[List] = None) -> List[List[int]]:

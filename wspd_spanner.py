@@ -7,11 +7,13 @@ from scripts.data_types import TreeNode, BoundingBox
 
 
 class WspdSpanner(ISpanner):
-    def __init__(self, separation_factor: int = 6):
+    def __init__(self, separation_factor: int = 6, nodes: nx.Graph = random_nodes(5)):
         self.s = separation_factor
+        self.nodes = nodes
+        self.topology = self.brute_force(self.nodes)
 
-    def generate_topology(self, nodes: Optional[List] = random_nodes(5)):
-        G_ = self.brute_force(nodes)
+    def generate_topology(self):
+        G_ = self.brute_force(self.nodes)
         return G_
 
     def _coords(self, G, node):

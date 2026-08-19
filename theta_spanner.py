@@ -5,12 +5,14 @@ from typing import Optional, List
 from spanner_interface import ISpanner
 
 class ThetaSpanner(ISpanner):
-    def __init__(self, k: int = 6):
+    def __init__(self, k: int = 6, nodes: nx.Graph= random_nodes(5)):
         self.k = k
+        self.nodes = nodes
         self.cone_width = 2 * math.pi / self.k
+        self.topology = self.brute_force_theta(self.nodes)
 
-    def generate_topology(self, nodes: Optional[List] = random_nodes(5)):
-        G_theta = self.brute_force_theta(nodes)
+    def generate_topology(self):
+        G_theta = self.brute_force_theta(self.nodes)
         return G_theta
 
     def brute_force_theta(self, G_in: nx.Graph):
